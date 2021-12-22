@@ -1,14 +1,16 @@
+const DEFAULT_CSS = 'background: #000; color: #00ff22';
+
 export class ScenarioLogger {
   private readonly _scenarioLabel: string;
 
   constructor(
-    private readonly _scenarioId: string,
+    scenarioId: string,
     private readonly _iterations: number,
     private readonly _leftOffset: number = 5,
     private readonly _centerOffset: number = 7,
     private readonly _rightOffset: number = 5
   ) {
-    this._scenarioLabel = `SCENARIO ${this._scenarioId}`;
+    this._scenarioLabel = `SCENARIO ${scenarioId}`;
   }
 
   logTitle() {
@@ -23,13 +25,14 @@ export class ScenarioLogger {
     strbuilder.push(new Array(this._rightOffset).fill(' ').join(''));
 
     const title = strbuilder.join('');
-    console.log(
+    const header =
       new Array(title.length).fill('-').join('') +
-        '\r\n' +
-        title +
-        '\r\n' +
-        new Array(title.length).fill('-').join('')
-    );
+      '\r\n' +
+      title +
+      '\r\n' +
+      new Array(title.length).fill('-').join('');
+
+    console.log(`%c${header}`, DEFAULT_CSS);
   }
 
   logFooter() {
@@ -38,6 +41,7 @@ export class ScenarioLogger {
       (this._iterations - 1) * this._centerOffset +
       this._rightOffset +
       this._iterations * this._scenarioLabel.length;
-    console.log(new Array(length).fill('-').join(''));
+    const footer = new Array(length).fill('-').join('');
+    console.log(`%c${footer}`, DEFAULT_CSS);
   }
 }

@@ -4,6 +4,11 @@ import { finalize, multicast, refCount } from 'rxjs/operators';
 import { IComponent } from './component.interface';
 import { IProvider } from './provider.interface';
 
+const LOG_PREFIX = 'Component<T>';
+const PREFIX_COLOR_CSS = 'color: cornflowerBlue';
+const WARN_COLOR_CSS = 'color: DarkGoldenRod';
+const WARN_BACKGROUND_CSS = 'background: #FFFACD22';
+
 export class Component<T> implements IComponent {
   private readonly multiCastReplaySubject = new ReplaySubject<T>(1);
   readonly viewModel$: Observable<T>;
@@ -12,14 +17,22 @@ export class Component<T> implements IComponent {
     this.viewModel$ = provider.getData().pipe(
       multicast(this.multiCastReplaySubject),
       refCount(),
-      finalize(() => console.warn('Component<T>.viewModel$ completed'))
+      finalize(() =>
+        console.log(
+          `%c${LOG_PREFIX}.viewModel$%c completed`,
+          `${PREFIX_COLOR_CSS}; ${WARN_BACKGROUND_CSS}`,
+          `${WARN_COLOR_CSS}; ${WARN_BACKGROUND_CSS}`
+        )
+      )
     );
   }
 
   ngOnInit(): void {
     this.viewModel$.subscribe((result) =>
       console.info(
-        'Component<T>.ngOnInit() -> this.viewModel$.subscribe(result) -> result:',
+        `%c${LOG_PREFIX}.ngOnInit()%c: this.viewModel$.subscribe(result) -> result:`,
+        PREFIX_COLOR_CSS,
+        '',
         result
       )
     );
@@ -28,7 +41,9 @@ export class Component<T> implements IComponent {
   ngAfterViewInit() {
     this.viewModel$.subscribe((result) =>
       console.info(
-        'Component<T>.ngAfterViewInit() -> this.viewModel$.subscribe(result) -> result:',
+        `%c${LOG_PREFIX}.ngAfterViewInit()%c: this.viewModel$.subscribe(result) -> result:`,
+        PREFIX_COLOR_CSS,
+        '',
         result
       )
     );
@@ -37,7 +52,9 @@ export class Component<T> implements IComponent {
   subscribeLaterInCode() {
     this.viewModel$.subscribe((result) =>
       console.info(
-        'Component<T>.subscribeLaterInCode() -> this.viewModel$.subscribe(result) -> result:',
+        `%c${LOG_PREFIX}.subscribeLaterInCode()%c: this.viewModel$.subscribe(result) -> result:`,
+        PREFIX_COLOR_CSS,
+        '',
         result
       )
     );
@@ -45,15 +62,21 @@ export class Component<T> implements IComponent {
 
   ngOnDestroy() {
     console.info(
-      'Component<T>.ngOnDestroy -> multiCastReplaySubject.observers.length:',
+      `%c${LOG_PREFIX}.ngOnDestroy()%c: this.multiCastReplaySubject.observers.length ->`,
+      PREFIX_COLOR_CSS,
+      '',
       this.multiCastReplaySubject.observers.length
     );
-    console.warn(
-      'Component<T>.ngOnDestroy -> multiCastReplaySubject.complete()'
+    console.log(
+      `%c${LOG_PREFIX}.ngOnDestroy():%c this.multiCastReplaySubject.complete()`,
+      `${PREFIX_COLOR_CSS}; ${WARN_BACKGROUND_CSS}`,
+      `${WARN_COLOR_CSS}; ${WARN_BACKGROUND_CSS}`
     );
     this.multiCastReplaySubject.complete();
     console.info(
-      'Component<T>.ngOnDestroy -> multiCastReplaySubject.observers.length:',
+      `%c${LOG_PREFIX}.ngOnDestroy()%c: this.multiCastReplaySubject.observers.length ->`,
+      PREFIX_COLOR_CSS,
+      '',
       this.multiCastReplaySubject.observers.length
     );
   }

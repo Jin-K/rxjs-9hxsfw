@@ -1,1 +1,1 @@
-export { HttpProvider } from './http-provider.class';
+export { FakeHttpProvider } from './http-provider.class';
