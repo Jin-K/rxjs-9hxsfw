@@ -1,14 +1,19 @@
 import { Observable, ReplaySubject } from 'rxjs';
 import { finalize, multicast, refCount } from 'rxjs/operators';
 
-import { IComponent } from './component.interface';
 import { IProvider } from './provider.interface';
+
+export interface IComponent {
+  ngOnInit(): void;
+  ngAfterViewInit(): void;
+  subscribeLaterInCode(): void;
+  ngOnDestroy(): void;
+}
 
 const LOG_PREFIX = 'Component<T>';
 const PREFIX_COLOR_CSS = 'color: cornflowerBlue';
 const WARN_COLOR_CSS = 'color: DarkGoldenRod';
 const WARN_BACKGROUND_CSS = 'background: #FFFACD22';
-
 export class Component<T> implements IComponent {
   private readonly multiCastReplaySubject = new ReplaySubject<T>(1);
   readonly viewModel$: Observable<T>;

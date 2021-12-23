@@ -1,4 +1,14 @@
-import { Program } from './program';
+import { FakeHttpProvider } from './providers';
+import { Component, Scenario } from './runtime';
+import { sleep } from './runtime/sleep.function';
 import './style.css';
 
-Program.main();
+(async function main() {
+  const component1 = new Component(FakeHttpProvider.current);
+  const scenario1 = new Scenario(1, component1);
+  await scenario1.run();
+
+  await sleep(2500);
+
+  await scenario1.run();
+})();
