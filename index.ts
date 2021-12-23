@@ -10,5 +10,6 @@ import './style.css';
 
   await sleep(2500);
 
-  await scenario1.run();
+  const scenario2 = new Scenario(2, component1);
+  await scenario2.run();
 })();

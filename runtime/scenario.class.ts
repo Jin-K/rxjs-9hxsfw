@@ -2,36 +2,25 @@ import { IComponent } from './component.class';
 import { CoolLogger } from './cool-logger.class';
 import { sleep } from './sleep.function';
 
-const LOG_PREFIX = 'LifeCycle.runOn(component)';
-const PREFIX_CSS = 'color: #ed2222';
 class LifeCycle {
+  private static _logger: CoolLogger = new CoolLogger(
+    'LifeCycle.runOn(component)',
+    'color: #ed2222'
+  );
   static async runOn(component: IComponent) {
-    debugger;
-    CoolLogger.log(LOG_PREFIX, { color: '#ed2222' }, false, {
-      value: 'component.ngOnInit()',
-      style: {},
-    });
-    console.info(`%c${LOG_PREFIX}%c: component.ngOnInit()`, PREFIX_CSS, '');
+    this._logger.log(false, 'component.ngOnInit()');
     component.ngOnInit();
     await sleep(1000);
 
-    console.info(
-      `%c${LOG_PREFIX}%c: component.ngAfterViewInit()`,
-      PREFIX_CSS,
-      ''
-    );
+    this._logger.log(false, 'component.ngAfterViewInit()');
     component.ngAfterViewInit();
     await sleep(1000);
 
-    console.info(
-      `%c${LOG_PREFIX}%c: component.subscribeLaterInCode()`,
-      PREFIX_CSS,
-      ''
-    );
+    this._logger.log(false, 'component.subscribeLaterInCode()');
     component.subscribeLaterInCode();
     await sleep(1000);
 
-    console.info(`%c${LOG_PREFIX}%c: component.ngOnDestroy()`, PREFIX_CSS, '');
+    this._logger.log(false, 'component.ngOnDestroy()');
     component.ngOnDestroy();
   }
 }
