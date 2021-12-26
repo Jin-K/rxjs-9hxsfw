@@ -25,8 +25,11 @@ class LifeCycle {
   }
 }
 
-const DEFAULT_CSS = { background: '#000', color: '#00ff22' };
 class ScenarioLogger {
+  private readonly _defaultCss = {
+    background: '#000',
+    color: '#00ff22',
+  } as const;
   private readonly _scenarioLabel: string;
   private readonly _logger = new NotSoCoolLogger();
 
@@ -59,7 +62,7 @@ class ScenarioLogger {
       '\r\n' +
       new Array(title.length).fill('-').join('');
 
-    this._logger.log(false, [header, DEFAULT_CSS]);
+    this._logger.log(false, [header, this._defaultCss]);
   }
 
   logFooter() {
@@ -69,7 +72,7 @@ class ScenarioLogger {
       this._rightOffset +
       this._iterations * this._scenarioLabel.length;
     const footer = new Array(length).fill('-').join('');
-    this._logger.log(false, [footer, DEFAULT_CSS]);
+    this._logger.log(false, [footer, this._defaultCss]);
   }
 }
 

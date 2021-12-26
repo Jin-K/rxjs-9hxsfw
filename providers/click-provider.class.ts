@@ -1,9 +1,9 @@
 import { fromEvent } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { CoolLogger, IProvider } from '../runtime';
+import { NotSoCoolLogger, IProvider } from '../runtime';
 
 export class ClickProvider implements IProvider<Event> {
-  private readonly _logger = new CoolLogger()
+  private readonly _logger = new NotSoCoolLogger()
     .withPrefix('ClickProvider.getData()')
     .withPrefixStyle({ color: 'fuchsia' });
 

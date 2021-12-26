@@ -19,7 +19,7 @@ export class FakeHttpProvider implements IProvider<string> {
       }, this._delay);
 
       return () =>
-        this._logger.log(false, 'http observable being unsubscribed :D');
+        this._logger.log(false, 'http observable being unsubscribed :)');
     });
   }
 }

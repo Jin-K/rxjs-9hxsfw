@@ -90,42 +90,42 @@ export class NotSoCoolLogger {
   }
 
   private stringCssStylesToAcceptedStyles(cssStyles: string): AcceptedStyles {
-    let toTreat = cssStyles;
+    let toTreat = cssStyles.toString();
     const result: AcceptedStyles = {};
 
-    while (toTreat.length) {
-      if (toTreat.startsWith('background:')) {
-        let rest = toTreat.slice('background:'.length);
-        while (rest.startsWith(' ')) {
-          rest = rest.slice(1);
-        }
-        const parts = rest.split(';');
-        const background = parts[0];
-        result.background = background;
-        if (parts.length > 1) {
-          parts.shift();
-          toTreat = parts.join(';');
-        } else {
-          toTreat = '';
-        }
-      } else if (toTreat.startsWith('color:')) {
-        let rest = toTreat.slice('color:'.length);
-        while (rest.startsWith(' ')) {
-          rest = rest.slice(1);
-        }
-        const parts = rest.split(';');
-        const color = parts[0];
-        result.color = color;
-        if (parts.length > 1) {
-          parts.shift();
-          toTreat = parts.join(';');
-        } else {
-          toTreat = '';
-        }
+    while (toTreat) {
+      switch (true) {
+        case toTreat.startsWith('background:'):
+          toTreat = this.optimisticParseStyle(toTreat, 'background', result);
+          break;
+        case toTreat.startsWith('color:'):
+          toTreat = this.optimisticParseStyle(toTreat, 'color', result);
+          break;
       }
     }
 
     return result;
+  }
+
+  private optimisticParseStyle(
+    toTreat: string,
+    styleKey: keyof AcceptedStyles,
+    parseObject: AcceptedStyles
+  ) {
+    let rest = toTreat.slice(`${styleKey}:`.length);
+    while (rest.startsWith(' ')) {
+      rest = rest.slice(1);
+    }
+    const parts = rest.split(';');
+    const style = parts[0];
+    parseObject[styleKey] = style;
+
+    if (parts.length > 1) {
+      parts.shift();
+      return parts.join(';');
+    }
+
+    return '';
   }
 }
 
