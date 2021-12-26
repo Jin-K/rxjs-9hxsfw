@@ -1,9 +1,9 @@
 import { IComponent } from './component.class';
-import { CoolLogger } from './cool-logger.class';
+import { NotSoCoolLogger } from './cool-logger.class';
 import { sleep } from './sleep.function';
 
 class LifeCycle {
-  private static _logger: CoolLogger = new CoolLogger(
+  private static _logger: NotSoCoolLogger = new NotSoCoolLogger(
     'LifeCycle.runOn(component)',
     'color: #ed2222'
   );
@@ -25,9 +25,10 @@ class LifeCycle {
   }
 }
 
-const DEFAULT_CSS = 'background: #000; color: #00ff22';
+const DEFAULT_CSS = { background: '#000', color: '#00ff22' };
 class ScenarioLogger {
   private readonly _scenarioLabel: string;
+  private readonly _logger = new NotSoCoolLogger();
 
   constructor(
     scenarioId: string,
@@ -58,7 +59,7 @@ class ScenarioLogger {
       '\r\n' +
       new Array(title.length).fill('-').join('');
 
-    console.log(`%c${header}`, DEFAULT_CSS);
+    this._logger.log(false, [header, DEFAULT_CSS]);
   }
 
   logFooter() {
@@ -68,7 +69,7 @@ class ScenarioLogger {
       this._rightOffset +
       this._iterations * this._scenarioLabel.length;
     const footer = new Array(length).fill('-').join('');
-    console.log(`%c${footer}`, DEFAULT_CSS);
+    this._logger.log(false, [footer, DEFAULT_CSS]);
   }
 }
 

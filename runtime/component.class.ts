@@ -1,5 +1,6 @@
 import { Observable, ReplaySubject } from 'rxjs';
 import { finalize, multicast, refCount } from 'rxjs/operators';
+import { NotSoCoolLogger } from './cool-logger.class';
 
 import { IProvider } from './provider.interface';
 
@@ -10,11 +11,11 @@ export interface IComponent {
   ngOnDestroy(): void;
 }
 
-const LOG_PREFIX = 'Component<T>';
-const PREFIX_COLOR_CSS = 'color: cornflowerBlue';
-const WARN_COLOR_CSS = 'color: DarkGoldenRod';
-const WARN_BACKGROUND_CSS = 'background: #FFFACD22';
 export class Component<T> implements IComponent {
+  private readonly _logger = new NotSoCoolLogger(
+    'Component<T>',
+    'color: cornflowerBlue'
+  );
   private readonly multiCastReplaySubject = new ReplaySubject<T>(1);
   readonly viewModel$: Observable<T>;
 
@@ -23,66 +24,59 @@ export class Component<T> implements IComponent {
       multicast(this.multiCastReplaySubject),
       refCount(),
       finalize(() =>
-        console.log(
-          `%c${LOG_PREFIX}.viewModel$%c completed`,
-          `${PREFIX_COLOR_CSS}; ${WARN_BACKGROUND_CSS}`,
-          `${WARN_COLOR_CSS}; ${WARN_BACKGROUND_CSS}`
-        )
+        this._logger.log(true, [
+          'viewModel$ completed',
+          { color: 'DarkGoldenRod' },
+        ])
       )
     );
   }
 
   ngOnInit(): void {
     this.viewModel$.subscribe((result) =>
-      console.info(
-        `%c${LOG_PREFIX}.ngOnInit()%c: this.viewModel$.subscribe(result) -> result:`,
-        PREFIX_COLOR_CSS,
-        '',
-        result
+      this._logger.log(
+        false,
+        'this.ngOnInit() -> this.viewModel$.subscribe(result) -> result -> ',
+        result.toString()
       )
     );
   }
 
   ngAfterViewInit() {
     this.viewModel$.subscribe((result) =>
-      console.info(
-        `%c${LOG_PREFIX}.ngAfterViewInit()%c: this.viewModel$.subscribe(result) -> result:`,
-        PREFIX_COLOR_CSS,
-        '',
-        result
+      this._logger.log(
+        false,
+        'this.ngAfterViewInit() -> this.viewModel$.subscribe(result) -> result -> ',
+        result.toString()
       )
     );
   }
 
   subscribeLaterInCode() {
     this.viewModel$.subscribe((result) =>
-      console.info(
-        `%c${LOG_PREFIX}.subscribeLaterInCode()%c: this.viewModel$.subscribe(result) -> result:`,
-        PREFIX_COLOR_CSS,
-        '',
-        result
+      this._logger.log(
+        false,
+        'this.subscribeLaterInCode() -> this.viewModel$.subscribe(result) -> result -> ',
+        result.toString()
       )
     );
   }
 
   ngOnDestroy() {
-    console.info(
-      `%c${LOG_PREFIX}.ngOnDestroy()%c: this.multiCastReplaySubject.observers.length ->`,
-      PREFIX_COLOR_CSS,
-      '',
-      this.multiCastReplaySubject.observers.length
+    this._logger.log(
+      false,
+      'this.ngOnDestroy() -> this.multiCastReplaySubject.observers.length -> ',
+      this.multiCastReplaySubject.observers.length.toString()
     );
-    console.log(
-      `%c${LOG_PREFIX}.ngOnDestroy():%c this.multiCastReplaySubject.complete()`,
-      `${PREFIX_COLOR_CSS}; ${WARN_BACKGROUND_CSS}`,
-      `${WARN_COLOR_CSS}; ${WARN_BACKGROUND_CSS}`
-    );
+    this._logger.log(true, [
+      'this.ngOnDestroy() -> this.multiCastReplaySubject.complete()',
+      { color: 'DarkGoldenRod' },
+    ]);
     this.multiCastReplaySubject.complete();
-    console.info(
-      `%c${LOG_PREFIX}.ngOnDestroy()%c: this.multiCastReplaySubject.observers.length ->`,
-      PREFIX_COLOR_CSS,
-      '',
-      this.multiCastReplaySubject.observers.length
+    this._logger.log(
+      false,
+      'this.ngOnDestroy() -> this.multiCastReplaySubject.observers.length -> ',
+      this.multiCastReplaySubject.observers.length.toString()
     );
   }
 }

@@ -1,34 +1,25 @@
 import { Observable } from 'rxjs';
 
-import { IProvider } from '../runtime';
-
-const LOG_PREFIX = 'HttpProvider.getData()';
-const PREFIX_CSS = 'color: fuchsia';
+import { NotSoCoolLogger, IProvider } from '../runtime';
 
 export class FakeHttpProvider implements IProvider<string> {
-  private readonly _delay = 125;
+  private readonly _delay = 200;
+  private readonly _logger = new NotSoCoolLogger()
+    .withPrefix('HttpProvider.getData()')
+    .withPrefixStyle({ color: 'fuchsia' });
 
-  private static _instance: FakeHttpProvider | null = null;
-  static get current(): FakeHttpProvider {
-    return (this._instance ??= new FakeHttpProvider());
-  }
-
-  getData(): Observable<string> {
-    return new Observable((subscriber) => {
-      console.log(`%c${LOG_PREFIX}%c: making http call :'(`, PREFIX_CSS, '');
+  getData() {
+    return new Observable<string>((subscriber) => {
+      this._logger.log(false, "making http call :'(");
 
       setTimeout(() => {
-        console.log(`%c${LOG_PREFIX}%c: http result :|`, PREFIX_CSS, '');
+        this._logger.log(false, 'http result :|');
         subscriber.next('Hello World from HTTP');
         subscriber.complete();
       }, this._delay);
 
       return () =>
-        console.log(
-          `%c${LOG_PREFIX}%c: http observable being unsubscribed :D`,
-          PREFIX_CSS,
-          ''
-        );
+        this._logger.log(false, 'http observable being unsubscribed :D');
     });
   }
 }
