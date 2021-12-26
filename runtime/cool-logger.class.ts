@@ -6,24 +6,31 @@ import { isArray } from 'rxjs/internal-compatibility';
 export class NotSoCoolLogger {
   private _prefix: string | undefined;
   private _prefixStyle: AcceptedStyles | string | null | undefined;
+  private _highlight: boolean = false;
 
-  constructor(prefix?: string, prefixStyle?: AcceptedStyles | string | null) {
+  constructor(
+    prefix?: string,
+    prefixStyle?: AcceptedStyles | string | null,
+    highlight?: boolean
+  ) {
     this._prefix = prefix;
     this._prefixStyle = prefixStyle;
+    this._highlight = highlight;
   }
 
   withPrefix(prefix: string) {
-    this._prefix = prefix;
-    return this;
+    return new NotSoCoolLogger(prefix, this._prefixStyle, this._highlight);
   }
 
   withPrefixStyle(prefixStyle: AcceptedStyles | string) {
-    this._prefixStyle = prefixStyle;
-    return this;
+    return new NotSoCoolLogger(this._prefix, prefixStyle, this._highlight);
+  }
+
+  withHighlight() {
+    return new NotSoCoolLogger(this._prefix, this._prefixStyle, true);
   }
 
   log(
-    highLighted: boolean,
     ...parts: (
       | string
       | [string, AcceptedStyles | string | null | undefined]
@@ -35,14 +42,14 @@ export class NotSoCoolLogger {
       ? [
           typeof this._prefixStyle == undefined
             ? ''
-            : this.buildCssString(this._prefixStyle, highLighted),
+            : this.buildCssString(this._prefixStyle, this._highlight),
         ]
       : [];
 
     for (const part of parts) {
       if (typeof part === 'string') {
         textArgs.push(part);
-        styleArgs.push(this.buildCssString({}, highLighted));
+        styleArgs.push(this.buildCssString({}, this._highlight));
       } else if (isArray(part)) {
         textArgs.push(part[0]);
         styleArgs.push(
@@ -50,7 +57,7 @@ export class NotSoCoolLogger {
             ? part[1]
             : part[1] == undefined
             ? ''
-            : this.buildCssString(part[1], highLighted)
+            : this.buildCssString(part[1], this._highlight)
         );
       } else {
         textArgs.push(part.value);
@@ -59,7 +66,7 @@ export class NotSoCoolLogger {
             ? part.style
             : part.style == undefined
             ? ''
-            : this.buildCssString(part.style, highLighted)
+            : this.buildCssString(part.style, this._highlight)
         );
       }
     }

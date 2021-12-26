@@ -9,7 +9,7 @@ export class ClickProvider implements IProvider<Event> {
 
   getData() {
     return finalize<Event>(() =>
-      this._logger.log(false, 'observable being unsubscribed')
+      this._logger.log('observable being unsubscribed')
     )(fromEvent(document, 'click'));
   }
 }

@@ -8,19 +8,19 @@ class LifeCycle {
     'color: #ed2222'
   );
   static async runOn(component: IComponent) {
-    this._logger.log(false, 'component.ngOnInit()');
+    this._logger.log('component.ngOnInit()');
     component.ngOnInit();
     await sleep(1000);
 
-    this._logger.log(false, 'component.ngAfterViewInit()');
+    this._logger.log('component.ngAfterViewInit()');
     component.ngAfterViewInit();
     await sleep(1000);
 
-    this._logger.log(false, 'component.subscribeLaterInCode()');
+    this._logger.log('component.subscribeLaterInCode()');
     component.subscribeLaterInCode();
     await sleep(1000);
 
-    this._logger.log(false, 'component.ngOnDestroy()');
+    this._logger.log('component.ngOnDestroy()');
     component.ngOnDestroy();
   }
 }
@@ -62,7 +62,7 @@ class ScenarioLogger {
       '\r\n' +
       new Array(title.length).fill('-').join('');
 
-    this._logger.log(false, [header, this._defaultCss]);
+    this._logger.log([header, this._defaultCss]);
   }
 
   logFooter() {
@@ -72,7 +72,7 @@ class ScenarioLogger {
       this._rightOffset +
       this._iterations * this._scenarioLabel.length;
     const footer = new Array(length).fill('-').join('');
-    this._logger.log(false, [footer, this._defaultCss]);
+    this._logger.log([footer, this._defaultCss]);
   }
 }
 

@@ -24,7 +24,7 @@ export class Component<T> implements IComponent {
       multicast(this.multiCastReplaySubject),
       refCount(),
       finalize(() =>
-        this._logger.log(true, [
+        this._logger.withHighlight(true).log([
           'viewModel$ completed',
           { color: 'DarkGoldenRod' },
         ])
@@ -35,7 +35,6 @@ export class Component<T> implements IComponent {
   ngOnInit(): void {
     this.viewModel$.subscribe((result) =>
       this._logger.log(
-        false,
         'this.ngOnInit() -> this.viewModel$.subscribe(result) -> result -> ',
         result.toString()
       )
@@ -45,7 +44,6 @@ export class Component<T> implements IComponent {
   ngAfterViewInit() {
     this.viewModel$.subscribe((result) =>
       this._logger.log(
-        false,
         'this.ngAfterViewInit() -> this.viewModel$.subscribe(result) -> result -> ',
         result.toString()
       )
@@ -55,7 +53,6 @@ export class Component<T> implements IComponent {
   subscribeLaterInCode() {
     this.viewModel$.subscribe((result) =>
       this._logger.log(
-        false,
         'this.subscribeLaterInCode() -> this.viewModel$.subscribe(result) -> result -> ',
         result.toString()
       )
@@ -64,17 +61,15 @@ export class Component<T> implements IComponent {
 
   ngOnDestroy() {
     this._logger.log(
-      false,
       'this.ngOnDestroy() -> this.multiCastReplaySubject.observers.length -> ',
       this.multiCastReplaySubject.observers.length.toString()
     );
-    this._logger.log(true, [
+    this._logger.withHighlight().log([
       'this.ngOnDestroy() -> this.multiCastReplaySubject.complete()',
       { color: 'DarkGoldenRod' },
     ]);
     this.multiCastReplaySubject.complete();
     this._logger.log(
-      false,
       'this.ngOnDestroy() -> this.multiCastReplaySubject.observers.length -> ',
       this.multiCastReplaySubject.observers.length.toString()
     );
