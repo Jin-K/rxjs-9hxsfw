@@ -24,10 +24,9 @@ export class Component<T> implements IComponent {
       multicast(this.multiCastReplaySubject),
       refCount(),
       finalize(() =>
-        this._logger.withHighlight(true).log([
-          'viewModel$ completed',
-          { color: 'DarkGoldenRod' },
-        ])
+        this._logger
+          .withHighlight()
+          .log(['viewModel$ completed', { color: 'DarkGoldenRod' }])
       )
     );
   }
@@ -64,10 +63,12 @@ export class Component<T> implements IComponent {
       'this.ngOnDestroy() -> this.multiCastReplaySubject.observers.length -> ',
       this.multiCastReplaySubject.observers.length.toString()
     );
-    this._logger.withHighlight().log([
-      'this.ngOnDestroy() -> this.multiCastReplaySubject.complete()',
-      { color: 'DarkGoldenRod' },
-    ]);
+    this._logger
+      .withHighlight()
+      .log([
+        'this.ngOnDestroy() -> this.multiCastReplaySubject.complete()',
+        { color: 'DarkGoldenRod' },
+      ]);
     this.multiCastReplaySubject.complete();
     this._logger.log(
       'this.ngOnDestroy() -> this.multiCastReplaySubject.observers.length -> ',
